@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<link href="css/bootstrap.css" rel="stylesheet">
+		<script src="js/jquery-1.7.2.min.js"></script>
+		<script src="js/jquery.address.js"></script>
+		<script src="js/jQuery.tmpl.js"></script>
+		<script src="js/jquery.routes.js"></script>
+		<script src="js/knockout-2.0.0.js"></script>
+		<script src="js/example-routes.js"></script>
+	</head>
+	<body>
+		<div class="row">
+			<div class="span3 well">
+				<ul>
+					<li><a href="#/slickgrid">Slick Grid</a></li>
+					<li><a href="#/flot">Flot</a></li>
+				</ul>
+			</div>
+			<div class="span6">
+				<div class="content" data-bind="template: {name: viewModel.currentView().template, data: viewModel.currentView }" />
+			</div>
+		</div>
+	</body>
+</html>
