@@ -59,6 +59,7 @@ $(function () {
     ko.setTemplateEngine(templateEngine);
 
     if (viewModel.currentView.template != "dsds") {
+    	console.log(viewModel.currentView());
         ko.applyBindings(viewModel.currentView);
     }
 });
@@ -69,6 +70,31 @@ function Model(){
 
 function FlotModel(){
 	this.template = "Flot"
+	this.data = ko.observableArray([]);
+	this.test = ko.observable("test");
+    for (var i = 0; i < 14; i += 0.5)
+        this.data.push([i, Math.sin(i)]);
+        
+   ko.bindingHandlers.flot = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called when the binding is first applied to an element
+		    // Set up any initial state, event handlers, etc. here
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called once when the binding is first applied to an element,
+		    // and again whenever the associated observable changes value.
+		    // Update the DOM element based on the supplied values here.
+		    //var options = allBindingsAccessor().datepickerOptions || {};
+		    var value = valueAccessor();
+		    var valueUnwrapped = ko.utils.unwrapObservable(value);
+			$.plot($(element),[
+		        {
+		            data: valueUnwrapped,
+		            lines: { show: true, fill: true }
+		        }]);
+			//$(element).datepicker(options);
+		}
+	};
 };
 
 function SlickGridModel(){
