@@ -101,14 +101,12 @@ function FlotModel(){
 
 function SlickGridModel(){
 	this.template = "SlickGrid"
-	var grid;
 	
-	ko.bindingHandlers.slickGrid = {
-		init: function(element, valueAccessor) {
-			var settings = valueAccessor();
-			var data = ko.utils.unwrapObservable(settings.data);
-			var columns = ko.utils.unwrapObservable(settings.columns);
-			var options = ko.utils.unwrapObservable(settings.options) || {};
+  var grid;
+ko.bindingHandlers.slickGrid = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called when the binding is first applied to an element
+		    // Set up any initial state, event handlers, etc. here
   var columns = [
     {id: "title", name: "Title", field: "title"},
     {id: "duration", name: "Duration", field: "duration"},
@@ -123,30 +121,24 @@ function SlickGridModel(){
     enableColumnReorder: false
   };
 
-  var data = [];
-  for (var i = 0; i < 500; i++) {
-    data[i] = {
-      title: "Task " + i,
-      duration: "5 days",
-      percentComplete: Math.round(Math.random() * 100),
-      start: "01/01/2009",
-      finish: "01/05/2009",
-      effortDriven: (i % 5 == 0)
-    };
-  }
-			grid = new Slick.Grid("#myGrid", data, columns, options);
-			grid.updateRowCount();
-			grid.render();
+    var data = [];
+    for (var i = 0; i < 500; i++) {
+      data[i] = {
+        title: "Task " + i,
+        duration: "5 days",
+        percentComplete: Math.round(Math.random() * 100),
+        start: "01/01/2009",
+        finish: "01/05/2009",
+        effortDriven: (i % 5 == 0)
+      };
+    }
+
+    grid = new Slick.Grid("#myGrid", data, columns, options);
 		},
-		update: function(element, valueAccessor, allBindingAccessor, viewModel) {
-		   var settings = valueAccessor();
-		   var data = ko.utils.unwrapObservable(settings.data);
-		   //grid.setData(data);
-		   //grid.updateRowCount();
-		   //grid.render();   
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {  
 		}
-	}
 };
+}
 
 function DatePickerModel(){
 	this.template = "DatePicker";
