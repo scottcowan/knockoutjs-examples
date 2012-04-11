@@ -62,7 +62,6 @@ $(function () {
     ko.setTemplateEngine(templateEngine);
 
     if (viewModel.currentView.template != "dsds") {
-    	console.log(viewModel.currentView());
         ko.applyBindings(viewModel.currentView);
     }
 });
@@ -102,4 +101,105 @@ function FlotModel(){
 
 function SlickGridModel(){
 	this.template = "SlickGrid"
+	var grid;
+	
+	ko.bindingHandlers.slickGrid = {
+		init: function(element, valueAccessor) {
+			var settings = valueAccessor();
+			var data = ko.utils.unwrapObservable(settings.data);
+			var columns = ko.utils.unwrapObservable(settings.columns);
+			var options = ko.utils.unwrapObservable(settings.options) || {};
+  var columns = [
+    {id: "title", name: "Title", field: "title"},
+    {id: "duration", name: "Duration", field: "duration"},
+    {id: "%", name: "% Complete", field: "percentComplete"},
+    {id: "start", name: "Start", field: "start"},
+    {id: "finish", name: "Finish", field: "finish"},
+    {id: "effort-driven", name: "Effort Driven", field: "effortDriven"}
+  ];
+
+  var options = {
+    enableCellNavigation: true,
+    enableColumnReorder: false
+  };
+
+  var data = [];
+  for (var i = 0; i < 500; i++) {
+    data[i] = {
+      title: "Task " + i,
+      duration: "5 days",
+      percentComplete: Math.round(Math.random() * 100),
+      start: "01/01/2009",
+      finish: "01/05/2009",
+      effortDriven: (i % 5 == 0)
+    };
+  }
+			grid = new Slick.Grid("#myGrid", data, columns, options);
+			grid.updateRowCount();
+			grid.render();
+		},
+		update: function(element, valueAccessor, allBindingAccessor, viewModel) {
+		   var settings = valueAccessor();
+		   var data = ko.utils.unwrapObservable(settings.data);
+		   //grid.setData(data);
+		   //grid.updateRowCount();
+		   //grid.render();   
+		}
+	}
 };
+
+function DatePickerModel(){
+	this.template = "DatePicker";
+	
+	self.Tomorrow = nextDay(new Date());
+
+	self.StartDate = ko.observable(self.Tomorrow);
+	
+	ko.bindingHandlers.datepicker = {
+		init: function(element, valueAccessor, allBindingsAccessor) {
+			//initialize datepicker with some optional options
+			var options = allBindingsAccessor().datepickerOptions || {};
+			$(element).datepicker(options);
+
+			//handle the field changing
+			ko.utils.registerEventHandler(element, "change", function() {
+				var observable = valueAccessor();
+				observable($(element).datepicker("getDate"));
+			});
+
+			//handle disposal (if KO removes by the template binding)
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+				$(element).datepicker("destroy");
+			});
+
+		},
+		update: function(element, valueAccessor) {
+			var value = ko.utils.unwrapObservable(valueAccessor());
+			//debugger;
+			if (isNaN(Date.parse(value))==false){
+				$(element).datepicker("setDate", value);
+			}
+		}
+	};
+}
+
+function nextDay(date){
+	var tomorrow = new Date();
+	tomorrow.setDate(date.getDate()+1);
+	return tomorrow;
+}
+
+function NextYear(){
+	var date1 = new Date();
+	date1.setFullYear(date1.getFullYear()+1);
+	return date1;
+}
+
+function noWeekendsOrHolidays(date) {
+  var noWeekend = jQuery.datepicker.noWeekends(date);
+    if (noWeekend[0]) {
+        return noWeekend;
+    } else {
+        return noWeekend;
+    }
+}

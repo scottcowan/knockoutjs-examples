@@ -1,0 +1,11 @@
+<form class="form-horizontal">
+    <fieldset>
+      <legend>Date Picker</legend>
+      <div class="control-group">
+        <label class="control-label">Start Date</label>
+        <div class="controls">
+		  <input data-bind="value: StartDate, datepicker: StartDate, datepickerOptions: { minDate: new Date(),maxDate:NextYear(),beforeShowDay: noWeekendsOrHolidays,dateFormat:'dd/mm/yy' }" class="span2" />
+        </div>
+      </div>
+    </fieldset>
+</form>
