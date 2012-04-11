@@ -14,6 +14,9 @@ $(function () {
 		},
 		"/slickgrid": function () {
 			viewModel.currentView(new SlickGridModel());
+		},
+		"/datepicker":function(){
+			viewModel.currentView(new DatePickerModel());
 		}
 	});
                 
@@ -71,7 +74,6 @@ function Model(){
 function FlotModel(){
 	this.template = "Flot"
 	this.data = ko.observableArray([]);
-	this.test = ko.observable("test");
     for (var i = 0; i < 14; i += 0.5)
         this.data.push([i, Math.sin(i)]);
         
@@ -87,12 +89,13 @@ function FlotModel(){
 		    //var options = allBindingsAccessor().datepickerOptions || {};
 		    var value = valueAccessor();
 		    var valueUnwrapped = ko.utils.unwrapObservable(value);
-			$.plot($(element),[
+			$.plot($(element),
+			[
 		        {
 		            data: valueUnwrapped,
 		            lines: { show: true, fill: true }
-		        }]);
-			//$(element).datepicker(options);
+		        }
+		    ]);
 		}
 	};
 };
