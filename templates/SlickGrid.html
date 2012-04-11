@@ -1,5 +1,9 @@
 <h3>Slick Grid</h3>
 
-<div id="myGrid" class="slickgrid" data-bind="slickGrid:{}" style="width:600px;height:500px;"></div>
-
+<div class="row">
+	<button data-bind="click:AddRow" class="btn btn-primary">Add Row</button>
+</div>
+<div class="row">
+	<div class="slickgrid" data-bind="slickGrid:{data:GridData,columns:GridColumns}" style="height:500px;"></div>
+</div>
 

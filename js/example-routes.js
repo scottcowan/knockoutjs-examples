@@ -103,41 +103,55 @@ function SlickGridModel(){
 	this.template = "SlickGrid"
 	
   var grid;
-ko.bindingHandlers.slickGrid = {
-		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
-		    // This will be called when the binding is first applied to an element
-		    // Set up any initial state, event handlers, etc. here
-  var columns = [
-    {id: "title", name: "Title", field: "title"},
-    {id: "duration", name: "Duration", field: "duration"},
-    {id: "%", name: "% Complete", field: "percentComplete"},
-    {id: "start", name: "Start", field: "start"},
-    {id: "finish", name: "Finish", field: "finish"},
-    {id: "effort-driven", name: "Effort Driven", field: "effortDriven"}
-  ];
+  var i = 0;
 
-  var options = {
-    enableCellNavigation: true,
-    enableColumnReorder: false
-  };
+    this.GridData = ko.observableArray([]);
+	this.GridColumns = ko.observableArray([
+		    {id: "title", name: "Title", field: "title"},
+		    {id: "duration", name: "Duration", field: "duration"},
+		    {id: "%", name: "% Complete", field: "percentComplete"},
+		    {id: "start", name: "Start", field: "start"},
+		    {id: "finish", name: "Finish", field: "finish"},
+		    {id: "effort-driven", name: "Effort Driven", field: "effortDriven"}
+		  ]);
 
-    var data = [];
-    for (var i = 0; i < 500; i++) {
-      data[i] = {
-        title: "Task " + i,
+    
+    this.AddRow = function(){
+    	this.GridData.push({
+        title: "Task " + i++,
         duration: "5 days",
         percentComplete: Math.round(Math.random() * 100),
         start: "01/01/2009",
         finish: "01/05/2009",
         effortDriven: (i % 5 == 0)
-      };
-    }
-
-    grid = new Slick.Grid("#myGrid", data, columns, options);
+      });
+    };
+	
+	this.AddRow();
+	
+ko.bindingHandlers.slickGrid = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called when the binding is first applied to an element
+		    // Set up any initial state, event handlers, etc. here
+		
+		  var options = {
+		    enableCellNavigation: true,
+		    enableColumnReorder: false
+		  };
+		  
+		  	var settings = valueAccessor();
+	        var data = ko.utils.unwrapObservable(settings.data);
+	        var columns = ko.utils.unwrapObservable(settings.columns);
+		
+		    grid = new Slick.Grid(element, data, columns, options);
 		},
-		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {  
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			var settings = valueAccessor();
+	        var data = ko.utils.unwrapObservable(settings.data);
+			grid.setData(data,true);
+			grid.render();
 		}
-};
+	};
 }
 
 function DatePickerModel(){
