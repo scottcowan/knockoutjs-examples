@@ -184,6 +184,10 @@ function SlickGridEditorModel(){
         effortDriven: (i % 5 == 0)
       });
     };
+    
+    this.Save = function(){
+    	console.log(grid.getData());
+    }
 	
 	this.AddRow();
 	
@@ -206,11 +210,13 @@ ko.bindingHandlers.slickGrid = {
 	        var columns = ko.utils.unwrapObservable(settings.columns);
 		
 		    grid = new Slick.Grid(element, data, columns, options);
+  			grid.onCellChange.subscribe(function (e, args) {
+  				data[args.row] = args.item;
+  			});
 		},
 		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
 			var settings = valueAccessor();
 	        var data = ko.utils.unwrapObservable(settings.data);
-			grid.setData(data,true);
 			grid.render();
 		}
 	};
