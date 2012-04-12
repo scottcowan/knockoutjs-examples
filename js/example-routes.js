@@ -186,6 +186,7 @@ function SlickGridEditorModel(){
     };
     
     this.Save = function(){
+		grid.getEditController().commitCurrentEdit()
     	console.log(grid.getData());
     }
 	
