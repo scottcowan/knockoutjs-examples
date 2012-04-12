@@ -12,8 +12,11 @@ $(function () {
 		"/flot": function () {
 			viewModel.currentView(new FlotModel());
 		},
-		"/slickgrid": function () {
+		"/slickgrid/basic": function () {
 			viewModel.currentView(new SlickGridModel());
+		},
+		"/slickgrid/editor": function () {
+			viewModel.currentView(new SlickGridEditorModel());
 		},
 		"/datepicker":function(){
 			viewModel.currentView(new DatePickerModel());
@@ -100,7 +103,7 @@ function FlotModel(){
 };
 
 function SlickGridModel(){
-	this.template = "SlickGrid"
+	this.template = "SlickGrid/Basic"
 	
   var grid;
   var i = 0;
@@ -137,6 +140,65 @@ ko.bindingHandlers.slickGrid = {
 		  var options = {
 		    enableCellNavigation: true,
 		    enableColumnReorder: false
+		  };
+		  
+		  	var settings = valueAccessor();
+	        var data = ko.utils.unwrapObservable(settings.data);
+	        var columns = ko.utils.unwrapObservable(settings.columns);
+		
+		    grid = new Slick.Grid(element, data, columns, options);
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+			var settings = valueAccessor();
+	        var data = ko.utils.unwrapObservable(settings.data);
+			grid.setData(data,true);
+			grid.render();
+		}
+	};
+}
+
+function SlickGridEditorModel(){
+	this.template = "SlickGrid/Editor"
+	
+  var grid;
+  var i = 0;
+
+    this.GridData = ko.observableArray([]);
+	this.GridColumns = ko.observableArray([
+		    {id: "title", name: "Title", field: "title"},
+		    {id: "duration", name: "Duration", field: "duration", editor:Slick.Editors.Text},
+		    {id: "%", name: "% Complete", field: "percentComplete", editor:Slick.Editors.Text},
+		    {id: "start", name: "Start", field: "start", editor:Slick.Editors.Text},
+		    {id: "finish", name: "Finish", field: "finish", editor:Slick.Editors.Text},
+		    {id: "effort-driven", name: "Effort Driven", field: "effortDriven", editor:Slick.Editors.Text}
+		  ]);
+
+    
+    this.AddRow = function(){
+    	this.GridData.push({
+        title: "Task " + i++,
+        duration: "5 days",
+        percentComplete: Math.round(Math.random() * 100),
+        start: "01/01/2009",
+        finish: "01/05/2009",
+        effortDriven: (i % 5 == 0)
+      });
+    };
+	
+	this.AddRow();
+	
+ko.bindingHandlers.slickGrid = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called when the binding is first applied to an element
+		    // Set up any initial state, event handlers, etc. here
+		
+		  var options = {
+		    enableCellNavigation: true,
+		    enableColumnReorder: false,
+		    editable: true, 
+		    enableAddRow: false, 
+		    asyncEditorLoading: false, 
+		    autoEdit: true
 		  };
 		  
 		  	var settings = valueAccessor();
