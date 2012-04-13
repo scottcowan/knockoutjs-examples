@@ -9,9 +9,12 @@ $(function () {
 		"/": function () {
 			viewModel.currentView(new Model());
 		},
-		"/flot": function () {
+		"/flot/basic": function () {
 			viewModel.currentView(new FlotModel());
 		},
+		"/flot/series": function () {
+			viewModel.currentView(new FlotSeriesModel());
+		},		
 		"/slickgrid/basic": function () {
 			viewModel.currentView(new SlickGridModel());
 		},
@@ -74,7 +77,7 @@ function Model(){
 };
 
 function FlotModel(){
-	this.template = "Flot"
+	this.template = "Flot/Basic"
 	this.data = ko.observableArray([]);
     for (var i = 0; i < 14; i += 0.5)
         this.data.push([i, Math.sin(i)]);
@@ -98,6 +101,46 @@ function FlotModel(){
 		            lines: { show: true, fill: true }
 		        }
 		    ]);
+		}
+	};
+};
+
+function FlotSeriesModel(){
+	this.template = "Flot/Series"
+	this.data = ko.observableArray();
+	
+	var days = [1,	2,	3,	4,	7,	14,	21,	30,	60,	90,	120,	150,	180,	210,	240,	270,	300,	330,	360];
+	var bands = ["0 - 50k","50k - 250k","250k - 1m","1m - 10m","10m - 50m","50m - 100m","over 100m"];
+	
+	for(var i=0;i<7;i++){
+		var row = [];
+		for(var j = 0; j<19;j++){
+			row[j] = [days[j],150 + i*Math.log(j*100)];
+		}
+		this.data().push(row);
+	}
+        
+   ko.bindingHandlers.flot = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called when the binding is first applied to an element
+		    // Set up any initial state, event handlers, etc. here
+		},
+		update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+		    // This will be called once when the binding is first applied to an element,
+		    // and again whenever the associated observable changes value.
+		    // Update the DOM element based on the supplied values here.
+		    //var options = allBindingsAccessor().datepickerOptions || {};
+		    var value = valueAccessor();
+		    var valueUnwrapped = ko.utils.unwrapObservable(value);
+		    var gridData = [];
+		    for(var i=0;i<7;i++){
+		    	gridData[i] = {
+					data: valueUnwrapped[i],
+					lines: { show: true, fill: false },
+					label: bands[i]
+				};
+		    }
+			$.plot($(element),gridData);
 		}
 	};
 };
