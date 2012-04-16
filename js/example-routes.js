@@ -157,10 +157,12 @@ function FlotSeriesModel(){
 			return "1y";
 	}
 	
-	for(var i=0;i<7;i++){
+	for(var i=6;i>=0;i--){
 		var row = [];
 		for(var j = 0; j<19;j++){
-			row[j] = [days[j],Math.round(150 + i*Math.log(j*100))];
+			var value = Math.round(150 + 1.2*i*Math.log(j*100));
+			if(j<6) value+=i;//i*10*Math.sin(j*2);
+			row[j] = [days[j],value];
 		}
 		this.data().push(row);
 	}
